@@ -40,10 +40,10 @@ class HomePage extends StatelessWidget {
           case ConnectionState.done:
             final user = FirebaseAuth.instance.currentUser;
             if (user != null) {
-              if (!user.emailVerified) {
-                return const VerifyEmailView();
-              } else {
+              if (user.emailVerified) {
                 return const NotesView();
+              } else {
+                return const VerifyEmailView();
               }
             } else {
               return const LoginView();
