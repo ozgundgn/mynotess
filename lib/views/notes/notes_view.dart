@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mynotes/services/auth/auth_service.dart';
 import 'package:mynotes/services/crud/notes_service.dart';
 
-import '../constants/routes.dart';
-import '../enums/menu_action.dart';
+import '../../constants/routes.dart';
+import '../../enums/menu_action.dart';
 
 class NotesView extends StatefulWidget {
   const NotesView({Key? key}) : super(key: key);
@@ -32,33 +32,41 @@ class _NotesViewState extends State<NotesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Main UI'), actions: [
-        PopupMenuButton<MenuAction>(
-          onSelected: (value) async {
-            switch (value) {
-              case MenuAction.logout:
-                final shouldLogout = await showLogOutDialog(context);
-                if (shouldLogout) {
-                  FirebaseAuth.instance.signOut();
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    loginRoute,
-                    (_) => false,
-                  );
-                }
-                break;
-              default:
-            }
-          },
-          itemBuilder: (context) {
-            return const [
-              PopupMenuItem<MenuAction>(
-                value: MenuAction.logout,
-                child: Text('Log out'),
-              ),
-            ];
-          },
-        )
-      ]),
+      appBar: AppBar(
+        title: const Text('Your Notes'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.of(context).pushNamed(newNoteRoute);
+            },
+          ),
+          PopupMenuButton<MenuAction>(
+            onSelected: (value) async {
+              switch (value) {
+                case MenuAction.logout:
+                  final shouldLogout = await showLogOutDialog(context);
+                  if (shouldLogout) {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      loginRoute,
+                      (_) => false,
+                    );
+                  }
+                  break;
+              }
+            },
+            itemBuilder: (context) {
+              return const [
+                PopupMenuItem<MenuAction>(
+                  value: MenuAction.logout,
+                  child: Text('Log out'),
+                )
+              ];
+            },
+          )
+        ],
+      ),
       body: FutureBuilder(
         future: _noteService.getOrCreateUser(email: userEmail),
         builder: (context, snapshot) {
