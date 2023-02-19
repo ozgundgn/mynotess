@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:mynotes/services/auth/auth_service.dart';
-import 'package:path/path.dart';
-
 import '../../services/crud/notes_service.dart';
 
 class NewNoteView extends StatefulWidget {

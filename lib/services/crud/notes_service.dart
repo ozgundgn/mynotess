@@ -54,11 +54,15 @@ class NotesService {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
 
-    await getNote(id: note.id);
-    final updateCounts = await db.update(noteTable, {
-      textColumn: text,
-      noteIsSync: 0,
-    });
+    final updateCounts = await db.update(
+      noteTable,
+      {
+        textColumn: text,
+        noteIsSync: 0,
+      },
+      where: "id=?",
+      whereArgs: [note.id],
+    );
     if (updateCounts == 0) {
       throw CouldNotUpdateNote();
     } else {
@@ -302,7 +306,7 @@ class DatabaseNote {
   operator ==(covariant DatabaseNote other) => id == other.id;
 }
 
-const dbName = 'notes.db';
+const dbName = 'testing.db';
 const noteTable = 'note';
 const userTable = 'user';
 const idColumn = 'id';
