@@ -14,23 +14,22 @@ class FirebaseCloudStorage {
     });
   }
 
-Future<void> updateNote({required String documentId,required String text,}{
-
-}) async {
-  try{
-await notes.doc(documentId).update({textFieldName:text});
-
-  }catch(e){
-    throw CouldNotUpdateNoteException();
+  Future<void> updateNote(
+      {required String documentId, required String text}) async {
+    try {
+      await notes.doc(documentId).update({textFieldName: text});
+    } catch (e) {
+      throw CouldNotUpdateNoteException();
+    }
   }
-}
 
-Future<void> deleteNote({required String documentId}) async {
-try{
-  await notes.doc(documentId).delete();
-}catch(e)
-{throw CouldNotDeleteNoteException();}
-}
+  Future<void> deleteNote({required String documentId}) async {
+    try {
+      await notes.doc(documentId).delete();
+    } catch (e) {
+      throw CouldNotDeleteNoteException();
+    }
+  }
 
   Stream<Iterable<CloudNote>> allNotes({required String ownerUserId}) =>
       notes.snapshots().map((event) => event.docs
