@@ -55,29 +55,37 @@ class _LoginViewState extends State<LoginView> {
               decoration:
                   const InputDecoration(hintText: 'Enter your password here.'),
             ),
-            TextButton(
-                onPressed: () async {
-                  final email = _mail.text;
-                  final password = _password.text;
-                  try {
+            BlocListener<AuthBloc, AuthState>(
+              listener: (context, state) async {
+                if (state is AuthStateLoggedOut) {
+                  if (state.exception is UserNotFoundAuthException) {
+                    await showErrorDialog(
+                      context: context,
+                      text: "User not found.",
+                    );
+                  } else if (state.exception is WrongPasswordAuthException) {
+                    await showErrorDialog(
+                      context: context,
+                      text: "Wrong credentials.",
+                    );
+                  } else if (state.exception is GenericAuthExcepiton) {
+                    await showErrorDialog(
+                      context: context,
+                      text: "Authentication error.",
+                    );
+                  }
+                }
+              },
+              child: TextButton(
+                  onPressed: () async {
+                    final email = _mail.text;
+                    final password = _password.text;
                     context
                         .read<AuthBloc>()
                         .add(AuthEventLogIn(email, password));
-                  } on UserNotFoundAuthException {
-                    await showErrorDialog(
-                        context: context, text: "User not found.");
-                  } on WrongPasswordAuthException {
-                    await showErrorDialog(
-                        context: context, text: "Wrong password.");
-                  } on GenericAuthExcepiton {
-                    await showErrorDialog(
-                        context: context, text: 'Error: something happened');
-                  } catch (e) {
-                    await showErrorDialog(
-                        context: context, text: 'Error: ${e.toString()}');
-                  }
-                },
-                child: const Text('Login')),
+                  },
+                  child: const Text('Login')),
+            ),
             TextButton(
               onPressed: () {
                 Navigator.of(context)
