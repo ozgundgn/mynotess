@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mynotes/helpers/loading/loading_screen.dart';
 import 'package:mynotes/services/auth/bloc/auth_bloc.dart';
 import 'package:mynotes/services/auth/bloc/auth_event.dart';
 import 'package:mynotes/services/auth/bloc/auth_state.dart';
@@ -35,7 +36,22 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<AuthBloc>().add(const AuthEventInitialize());
-    return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+    return BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
+      if (state.isLoading) {
+        LoadingScreen().show(
+          context: context,
+          text: state.loadingText ?? 'Please wait a moment',
+        );
+      } else {
+        LoadingScreen().hide();
+      }
+    }, builder: (context, state) {
+      //blocbuilder is not supposed to have any side affects. taht is the job of the block listener
+      //but we also need bloclistener to show state.isloagin and loading screen.
+      //blocconsumer is solution. blocconsumer builds on top of a block builder and a block listener so
+      //it allows you to do both things at the same time
+      //that is why we changed the blocBuilder to bloccosnumer
+
       if (state is AuthStateLoggedIn) {
         return const NotesView();
       } else if (state is AuthStateNeedsVerification) {
