@@ -6,6 +6,46 @@ import 'auth_event.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(AuthProvider provider)
       : super(const AuthStateUninitialized(isLoading: true)) {
+    //forgot password
+    on<AuthEventForgotPassword>((event, emit) async {
+      //when press the button we are saying go to the forgot password screen
+      //our main dart file is gonna handle this
+      emit(const AuthStateForgotPassword(
+        exception: null,
+        hasSentEmail: false,
+        isLoading: false,
+      ));
+      final email =
+          event.email; // we are gonna extract the user's email from this event
+      if (email == null) {
+        //user just want to go the forgot password screen
+        return;
+      }
+
+      //user want to actually send a forgot password email
+      emit(const AuthStateForgotPassword(
+        exception: null,
+        hasSentEmail: false,
+        isLoading: true,
+      ));
+
+      bool didSendEmail;
+      Exception? exception;
+      try {
+        await provider.sendPasswordReset(toEmail: email);
+        didSendEmail = true;
+        exception = null;
+      } on Exception catch (e) {
+        didSendEmail = false;
+        exception = e;
+      }
+
+      emit(AuthStateForgotPassword(
+        exception: exception,
+        hasSentEmail: didSendEmail,
+        isLoading: false,
+      )); //it cant be constant if it is a variable
+    });
     //send emial verification
 
     on<AuthEventSendEmailVerifaction>((event, emit) async {
@@ -18,6 +58,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final password = event.password;
       try {
         await provider.createUser(email: email, password: password);
+        emit(const AuthStateNeedsVerification(isLoading: false));
       } on Exception catch (e) {
         emit(AuthStateRegistering(exception: e, isLoading: false));
       }
