@@ -1,0 +1,4 @@
+storePassword=Ozgun13071993
+keyPassword=Ozgun13071993
+keyAlias=upload
+storeFile=C:\Users\BurNet\.android\upload-keystore.jks
