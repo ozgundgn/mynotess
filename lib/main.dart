@@ -12,18 +12,21 @@ import 'package:mynotes/views/notes/notes_view.dart';
 import 'package:mynotes/views/register_view.dart';
 import 'package:mynotes/views/verify_email_view.dart';
 import 'constants/routes.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MaterialApp(
+        supportedLocales: AppLocalizations
+            .supportedLocales, //yukarda verdiğimiz yolda zaten konumlar tanımlı old. için kendimiz bir liste üretmemeliyiz.
+        localizationsDelegates: AppLocalizations.localizationsDelegates, //pelase localize your own widget,
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
         home: BlocProvider<AuthBloc>(
-            create: (context) => AuthBloc(
-                FirebaseAuthProvider()), // burada AuthBloc contexte injecct oluyor.
+            create: (context) => AuthBloc(FirebaseAuthProvider()), // burada AuthBloc contexte injecct oluyor.
             child: const HomePage()),
         routes: {
           createOrUpdateNoteRoute: (context) => const CreateUpdatNoteView()
