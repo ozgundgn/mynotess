@@ -111,4 +111,17 @@ class FirebaseAuthProvider implements AuthProvider {
       throw GenericAuthExcepiton();
     }
   }
+
+  @override
+  Future<void> deleteUser() async {
+    try {
+      final user = await FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        throw UserNotFoundAuthException();
+      }
+      user.delete();
+    } on FirebaseAuthException catch (e) {
+      throw GenericAuthExcepiton();
+    }
+  }
 }

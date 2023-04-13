@@ -55,7 +55,7 @@ class _LoginViewState extends State<LoginView> {
           }
         }
       },
-      child: Scaffold(
+     child: Scaffold(
         appBar: AppBar(
           title: Text(context.loc.my_title),
         ),

@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-
 import 'generic_dialog.dart';
 
 Future<void> showErrorDialog({

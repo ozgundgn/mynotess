@@ -1,4 +1,7 @@
 import 'package:flutter/foundation.dart' show immutable;
+import 'package:flutter/material.dart';
+
+import '../auth_user.dart';
 
 @immutable
 abstract class AuthEvent {
@@ -38,4 +41,13 @@ class AuthEventForgotPassword extends AuthEvent {
 
 class AuthEventShouldRegister extends AuthEvent {
   const AuthEventShouldRegister();
+}
+
+class AuthEventCreateOrUpdateNote extends AuthEvent {
+  const AuthEventCreateOrUpdateNote();
+}
+
+class AuthEventAccountRemove extends AuthEvent {
+  final AuthUser? user;
+  const AuthEventAccountRemove({required this.user});
 }

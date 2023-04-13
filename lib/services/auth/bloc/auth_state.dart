@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show immutable;
-
 import '../auth_user.dart';
 
 @immutable
@@ -61,6 +60,10 @@ class AuthStateLoggedOut extends AuthState with EquatableMixin {
         );
 
   @override
-  // TODO: implement props
   List<Object?> get props => [exception, isLoading];
+}
+
+class AuthStateAccountRemoving extends AuthState {
+  final Exception? exception;
+  const AuthStateAccountRemoving({this.exception, required super.isLoading});
 }

@@ -5,9 +5,9 @@ import 'package:mynotes/services/auth/auth_service.dart';
 import 'package:mynotes/services/auth/bloc/auth_bloc.dart';
 import 'package:mynotes/services/cloud/cloud_note.dart';
 import 'package:mynotes/services/cloud/firebase_cloud_storage.dart';
-
 import '../../constants/routes.dart';
 import '../../enums/menu_action.dart';
+import '../../services/auth/auth_user.dart';
 import '../../services/auth/bloc/auth_event.dart';
 import '../../utilities/dialogs/logout_dialog.dart';
 import 'notes_list_view.dart';
@@ -25,12 +25,13 @@ class NotesView extends StatefulWidget {
 
 class _NotesViewState extends State<NotesView> {
   late final FirebaseCloudStorage _noteService;
-
+  late final AuthUser? _currentUser;
   String get userId => AuthService.firebase().currentUser!.id;
 
   @override
   void initState() {
     _noteService = FirebaseCloudStorage();
+    _currentUser = AuthService.firebase().currentUser;
     super.initState();
   }
 
@@ -70,6 +71,9 @@ class _NotesViewState extends State<NotesView> {
                       // ); bunları siliyoruz çünkü main.dart ta ki state dinleniyor ve loggedout olduğında loginview a gönder bloğu var orada.
                     }
                     break;
+                  case MenuAction.profileSettings:
+                    Navigator.of(context).pushNamed(profileSettingsRoute);
+                    break;
                 }
               },
               itemBuilder: (context) {
@@ -77,7 +81,11 @@ class _NotesViewState extends State<NotesView> {
                   PopupMenuItem<MenuAction>(
                     value: MenuAction.logout,
                     child: Text('Log out'),
-                  )
+                  ),
+                  PopupMenuItem<MenuAction>(
+                    value: MenuAction.profileSettings,
+                    child: Text('Profile Settings'),
+                  ),
                 ];
               },
             )

@@ -7,8 +7,9 @@ import 'package:mynotes/services/auth/bloc/auth_state.dart';
 import 'package:mynotes/services/auth/firebase_auth_provider.dart';
 import 'package:mynotes/views/forgot_password_view.dart';
 import 'package:mynotes/views/login_view.dart';
-import 'package:mynotes/views/notes/create_update_note_view.dart.dart';
+import 'package:mynotes/views/notes/create_update_note_view.dart';
 import 'package:mynotes/views/notes/notes_view.dart';
+import 'package:mynotes/views/profile/settings_view.dart';
 import 'package:mynotes/views/register_view.dart';
 import 'package:mynotes/views/verify_email_view.dart';
 import 'constants/routes.dart';
@@ -17,20 +18,28 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    MaterialApp(
+    BlocProvider(
+      create: (context) => AuthBloc(FirebaseAuthProvider()),
+      child: MaterialApp(
         supportedLocales: AppLocalizations
             .supportedLocales, //yukarda verdiğimiz yolda zaten konumlar tanımlı old. için kendimiz bir liste üretmemeliyiz.
-        localizationsDelegates: AppLocalizations.localizationsDelegates, //pelase localize your own widget,
+        localizationsDelegates: AppLocalizations
+            .localizationsDelegates, //pelase localize your own widget,
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: BlocProvider<AuthBloc>(
-            create: (context) => AuthBloc(FirebaseAuthProvider()), // burada AuthBloc contexte injecct oluyor.
-            child: const HomePage()),
+        home: const HomePage(),
+        // home: BlocProvider<AuthBloc>(
+        //     create: (context) => AuthBloc(
+        //         FirebaseAuthProvider()), // burada AuthBloc contexte injecct oluyor.
+        //     child: const HomePage()),
         routes: {
-          createOrUpdateNoteRoute: (context) => const CreateUpdatNoteView()
-        }),
+          createOrUpdateNoteRoute: (context) => const CreateUpdatNoteView(),
+          profileSettingsRoute: (context) => const SettingsView()
+        },
+      ),
+    ),
   );
 }
 
@@ -66,6 +75,8 @@ class HomePage extends StatelessWidget {
         return const RegisterView();
       } else if (state is AuthStateForgotPassword) {
         return const ForgotPasswordView();
+      } else if (state is AuthStateAccountRemoving) {
+        return const SettingsView();
       } else {
         return const CircularProgressIndicator();
       }

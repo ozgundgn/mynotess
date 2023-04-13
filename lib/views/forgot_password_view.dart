@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mynotes/services/auth/bloc/auth_bloc.dart';
 import 'package:mynotes/services/auth/bloc/auth_event.dart';
@@ -46,7 +43,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
             await showErrorDialog(
               context: context,
               text:
-                  "We could not process your request. Please make sure that you are a registered user, or if not, register a use now by going back one step.",
+                  "We could not process your request. Please make sure that you are a registered user, or if not, register a user now by going back one step.",
             );
           }
         }
